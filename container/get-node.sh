@@ -45,5 +45,7 @@ case "$URL" in
     ;;
 esac
 
+# shellcheck disable=SC2061,SC2162
 find . -path *bin/* | while read file; do cp "$file" /usr/local/bin/; done
+# shellcheck disable=SC2061,SC2162
 find . -path *lib/* | while read file; do cp "$file" /usr/local/lib/; done
