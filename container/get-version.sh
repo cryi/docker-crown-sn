@@ -18,6 +18,5 @@
 #
 #  Contact: cryi@tutanota.com
 
-ver=$(crownd -version | grep "Crown Core Daemon version v" | \
-    sed "s/Crown Core Daemon version v//" |  sed "s/-.*//")
+ver=$(crownd -version | grep "Crown Core Daemon version v" | sed "s/Crown Core Daemon version v//" |  sed "s/-.*//")
 printf "%s" "$ver"

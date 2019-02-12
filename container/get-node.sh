@@ -19,15 +19,31 @@
 #  Contact: cryi@tutanota.com
 
 GIT_INFO=$(curl -sL "https://api.github.com/repos/Crowndev/crown-core/releases/latest")                                       
-URL=$(printf "%s\n" "$GIT_INFO" | jq .assets[].browser_download_url -r | grep Crown | grep Linux | grep 64)                         
+URL=$(printf "%s\n" "$GIT_INFO" | jq .assets[].browser_download_url -r | grep Crown | grep Linux | grep 64)                        
 
-curl -L "$URL" -o ./crown.zip
+if [ -f "./limits.conf" ]; then 
+    if grep "NODE_BINARY=" "./limits.conf"; then 
+        NODE_BINARY=$(grep "NODE_BINARY=" "./limits.conf" | sed 's/NODE_BINARY=//g')
+        if [ -n "$NODE_BINARY" ] && [ ! "$NODE_BINARY" = "auto" ]; then
+            URL=$NODE_BINARY
+        fi
+    fi
+fi
 
-unzip ./crown.zip
-rootDir=$(ls -d Crown*/)
+FILE=crown
 
-chmod +x */bin/*
-cp -f */bin/* /usr/local/bin/
-cp -f */lib/* /usr/local/lib/
-rm -rf $rootDir
-rm -rf ./crown.zip
+case "$URL" in
+    *.tar.gz) 
+        curl -L "$URL" -o "./$FILE.tar.gz"
+        tar -xzvf "./$FILE.tar.gz"
+        rm -f "./$FILE.tar.gz"
+    ;;
+    *.zip)
+        curl -L "$URL" -o "./$FILE.zip"
+        unzip "./$FILE.zip"
+        rm -f "./$FILE.zip"
+    ;;
+esac
+
+find . -path *bin/* | while read file; do cp "$file" /usr/local/bin/; done
+find . -path *lib/* | while read file; do cp "$file" /usr/local/lib/; done

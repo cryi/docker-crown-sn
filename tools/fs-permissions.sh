@@ -22,6 +22,7 @@ BASEDIR=$(dirname "$0")
 INNER_UID=13000
 target_uid=$(grep "dockremap" /etc/subuid)
 target_uid=$(echo "$target_uid" | cut -d ":" -f 2)
+# shellcheck disable=SC2004
 INNER_UID=$(($target_uid + $INNER_UID))
 
 DIRS=\

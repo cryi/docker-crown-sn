@@ -32,4 +32,12 @@ case $PARAM in
         TEMP=$(sed "s/systemnodeprivkey=.*/systemnodeprivkey=$VALUE/g" "$BASEDIR/../data/crown.conf")
         printf "%s" "$TEMP" > "$BASEDIR/../data/crown.conf"
     ;;
+    NODE_VERSION) 
+        if grep "NODE_VERSION=" "$BASEDIR/../container/limits.conf"; then
+            TEMP=$(sed "s/NODE_VERSION=.*/NODE_VERSION=$VALUE/g" "$BASEDIR/../container/limits.conf")
+            printf "%s" "$TEMP" > "$BASEDIR/../container/limits.conf"
+        else 
+            printf "NODE_VERSION=%s" "$VALUE" >> "$BASEDIR/../container/limits.conf"
+        fi
+    ;;
 esac
